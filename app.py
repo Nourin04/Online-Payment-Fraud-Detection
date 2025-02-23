@@ -25,18 +25,22 @@ type_CASH_OUT = st.checkbox("CASH_OUT")
 type_DEBIT = st.checkbox("DEBIT")
 type_PAYMENT = st.checkbox("PAYMENT")
 type_TRANSFER = st.checkbox("TRANSFER")
+type_CASH_IN = st.checkbox("CASH_IN")  # Add this if your model was trained with CASH_IN
+
+# Convert checkbox inputs to binary flags
+transaction_type = [
+    int(type_CASH_OUT),
+    int(type_DEBIT),
+    int(type_PAYMENT),
+    int(type_TRANSFER),
+    int(type_CASH_IN)
+]
 
 # Prediction
 if st.button("🔍 Predict"):
-    # Set isFlaggedFraud to 0 automatically (not user input)
-    isFlaggedFraud = 0
-
-    # Prepare input data in the correct format (13 features)
-    input_data = np.array([[ 
-        step, amount, nameOrig, oldbalanceOrg, newbalanceOrig,
-        nameDest, oldbalanceDest, newbalanceDest, isFlaggedFraud,
-        int(type_CASH_OUT), int(type_DEBIT), int(type_PAYMENT), int(type_TRANSFER)
-    ]])
+    # Prepare input data in the correct format (matching model's 13 features)
+    input_data = np.array([[step, amount, nameOrig, oldbalanceOrg, newbalanceOrig,
+                            nameDest, oldbalanceDest, newbalanceDest] + transaction_type])
 
     # Make prediction
     prediction = model.predict(input_data)
