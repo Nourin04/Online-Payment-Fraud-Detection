@@ -12,8 +12,10 @@ st.write("Enter transaction details below to predict whether the transaction is 
 # Input fields for the transaction details
 step = st.number_input("Step (Time step of the transaction)", min_value=1)
 amount = st.number_input("Transaction Amount", min_value=0.0)
+nameOrig = st.number_input("Origin Account ID (numerical representation)", min_value=0)
 oldbalanceOrg = st.number_input("Old Balance (Origin)", min_value=0.0)
 newbalanceOrig = st.number_input("New Balance (Origin)", min_value=0.0)
+nameDest = st.number_input("Destination Account ID (numerical representation)", min_value=0)
 oldbalanceDest = st.number_input("Old Balance (Destination)", min_value=0.0)
 newbalanceDest = st.number_input("New Balance (Destination)", min_value=0.0)
 
@@ -26,11 +28,14 @@ type_TRANSFER = st.checkbox("TRANSFER")
 
 # Prediction
 if st.button("🔍 Predict"):
-    # Prepare input data in the correct format (no isFlaggedFraud or account IDs)
+    # Set isFlaggedFraud to 0 automatically (not user input)
+    isFlaggedFraud = 0
+
+    # Prepare input data in the correct format (13 features)
     input_data = np.array([[ 
-        step, amount, oldbalanceOrg, newbalanceOrig,
-        oldbalanceDest, newbalanceDest, int(type_CASH_OUT),
-        int(type_DEBIT), int(type_PAYMENT), int(type_TRANSFER)
+        step, amount, nameOrig, oldbalanceOrg, newbalanceOrig,
+        nameDest, oldbalanceDest, newbalanceDest, isFlaggedFraud,
+        int(type_CASH_OUT), int(type_DEBIT), int(type_PAYMENT), int(type_TRANSFER)
     ]])
 
     # Make prediction
